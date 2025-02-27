@@ -21,7 +21,8 @@
 %           D_S:                D_S index;
 %           QNR_index:          QNR index;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [D_lambda,D_S,QNR_index] = indexes_evaluation_FS(I_F,I_MS_LR,I_PAN,L,th_values,I_MS,sensor,ratio,flagQNR)
+% function [D_lambda,D_S,QNR_index] = indexes_evaluation_FS(I_F,I_MS_LR,I_PAN,L,th_values,I_MS,sensor,ratio,flagQNR)
+function [D_lambda,D_S,QNR_index, SCC_F,SAM_F, ERGAS_F, JQM_index] = indexes_evaluation_FS(I_F,I_MS_LR,I_PAN,L,th_values,I_MS,sensor,ratio,flagQNR)
 
 if th_values
     I_F(I_F > 2^L) = 2^L;
@@ -35,7 +36,21 @@ if flagQNR == 1
 else
     [QNR_index,D_lambda,D_S] = HQNR(I_F,I_MS_LR,I_MS,I_PAN,32,sensor,ratio);
 end
+v1 = 0.5;
+JQM_index = JQM(I_F,I_MS_LR,I_MS,I_PAN, L, v1, (1-v1));
 
+I_PAN_expand = repmat(I_PAN, [1, 1, size(I_F, 3)]);
+SCC_F = SCC(I_F,I_PAN_expand);
+
+% H/4, W/4, C 사이즈로 다운샘플링
+I_F_reduced = zeros(size(I_F, 1) / 4, size(I_F, 2) / 4, size(I_F, 3));
+
+for i = 1:size(I_F, 3)
+    I_F_reduced(:, :, i) = imresize(I_F(:, :, i), 1/4, 'bilinear');
+end
+SAM_F = SAM(I_MS_LR,I_F_reduced);
+
+ERGAS_F = ERGAS(I_MS_LR, I_F_reduced, 4);
 cd ..
 
 end

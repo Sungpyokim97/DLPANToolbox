@@ -44,12 +44,20 @@ algorithms = {'EXP','BT-H','BDSD-PC','C-GSA','SR-D',...
 % sensor = 'QB';
 sensor = 'GF2';
 
+% % Initialization of the Matrix of Results
+% NumIndexes = 3;
+% header = {'model','D_lambda', 'D_s', 'HQNR'};
+% MatrixResults = zeros(numel(algorithms),NumIndexes);
+% FR_matrix = cell(numel(algorithms),NumIndexes+1);
+% FR_matrix(1, :) = header;
+
 % Initialization of the Matrix of Results
-NumIndexes = 3;
-header = {'model','D_lambda', 'D_s', 'HQNR'};
+NumIndexes = 7;
+header = {'model','D_lambda', 'D_s', 'HQNR', 'SCC_F', 'SAM_F', 'ERGAS_F','JQM'};
 MatrixResults = zeros(numel(algorithms),NumIndexes);
 FR_matrix = cell(numel(algorithms),NumIndexes+1);
 FR_matrix(1, :) = header;
+
 
 flagQNR = 0; %% Flag QNR/HQNR, 1: QNR otherwise HQNR
 n = 1;
@@ -57,7 +65,10 @@ n = 1;
 ratio = 4;% Resize Factor    
 thvalues = 0;% Threshold values out of dynamic range
 %     printEPS = 0;% Print Eps
-    
+
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% ====== ours_t Method ======
